@@ -20,9 +20,7 @@ handler.put(async (req, res) => {
   const user = await User.findById(req.query.id)
   if (user) {
     user.name = req.body.name
-    user.email = req.body.email
-    user.password = req.body.password
-    user.isAdmin = req.body.isAdmin
+    user.isAdmin = Boolean(req.body.isAdmin)
     await user.save()
     await db.disconnect()
     res.send({ message: 'Usuário atualizado com sucesso' })
