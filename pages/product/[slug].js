@@ -12,7 +12,7 @@ import Store from '../../utils/store'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { Rating } from '@material-ui/lab'
-import getError from '../../utils/error'
+import { getError } from '../../utils/error'
 import { useEffect } from 'react'
 
 export default function ProductScreen({ product }) {
