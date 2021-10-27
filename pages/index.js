@@ -1,13 +1,12 @@
 import Image from 'next/image'
 import Layout from '../components/Layout.js'
 import useStyles from '../utils/styles.js'
-import { Grid, Card, CardActionArea, CardMedia, CardContent, CardActions, Typography, Button, Link } from '@material-ui/core'
-import NextLink from 'next/link'
+import { Grid, Typography, Button, } from '@material-ui/core'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import backgroundImage from '../assets/shopping.svg'
 import db from '../utils/db'
 import Product from '../models/Product'
-import Rating from '@material-ui/lab/Rating'
+import ProductItem from '../components/ProductItem'
 export default function Home({ products }) {
   const classes = useStyles()
   return (
@@ -34,22 +33,7 @@ export default function Home({ products }) {
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item md={4} key={product.name}>
-              <Card className={classes.card}>
-                <NextLink href={`/product/${product.slug}`} passHref>
-                  <CardActionArea >
-                    <CardMedia component="img" image={product.image} />
-                    <CardContent>
-                      <Typography>{product.name}</Typography>
-                      <Rating value={product.rating} readOnly></Rating>
-                    </CardContent>
-                  </CardActionArea>
-                </NextLink>
-                <CardActions>
-                  <NextLink href={`/product/${product.slug}`} passHref>
-                    <Link style={{ textDecoration: 'none' }} className={classes.price}>R${product.price.toFixed(2).toString().replace('.', ',')}</Link>
-                  </NextLink>
-                </CardActions>
-              </Card>
+              <ProductItem product={product} />
             </Grid>
           ))}
         </Grid>
