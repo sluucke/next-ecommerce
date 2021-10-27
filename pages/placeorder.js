@@ -45,7 +45,7 @@ function PlaceOrder() {
         itemsPrice,
         shippingPrice,
         taxPrice,
-        totalPrice
+        totalPrice,
       }, {
         headers: {
           authorization: `Bearer ${userInfo.token}`

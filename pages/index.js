@@ -1,12 +1,13 @@
 import Image from 'next/image'
 import Layout from '../components/Layout.js'
 import useStyles from '../utils/styles.js'
-import { Grid, Card, CardActionArea, CardMedia, CardContent, CardActions, Typography, Button } from '@material-ui/core'
+import { Grid, Card, CardActionArea, CardMedia, CardContent, CardActions, Typography, Button, Link } from '@material-ui/core'
 import NextLink from 'next/link'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import backgroundImage from '../assets/shopping.svg'
 import db from '../utils/db'
 import Product from '../models/Product'
+import Rating from '@material-ui/lab/Rating'
 export default function Home({ products }) {
   const classes = useStyles()
   return (
@@ -39,11 +40,14 @@ export default function Home({ products }) {
                     <CardMedia component="img" image={product.image} />
                     <CardContent>
                       <Typography>{product.name}</Typography>
+                      <Rating value={product.rating} readOnly></Rating>
                     </CardContent>
                   </CardActionArea>
                 </NextLink>
                 <CardActions>
-                  <Typography variant="subtitle1" className={classes.price}>R${product.price.toFixed(2).toString().replace('.', ',')}</Typography>
+                  <NextLink href={`/product/${product.slug}`} passHref>
+                    <Link style={{ textDecoration: 'none' }} className={classes.price}>R${product.price.toFixed(2).toString().replace('.', ',')}</Link>
+                  </NextLink>
                 </CardActions>
               </Card>
             </Grid>
@@ -57,7 +61,7 @@ export default function Home({ products }) {
 
 export async function getServerSideProps() {
   await db.connect()
-  const products = await Product.find({}).lean()
+  const products = await Product.find({}, '-reviews').lean()
   await db.disconnect()
   return {
     props: {
