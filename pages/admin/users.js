@@ -8,27 +8,37 @@ import { getError } from '../../utils/error'
 import Layout from '../../components/Layout'
 import useStyles from '../../utils/styles'
 import NextLink from 'next/link'
+import { useSnackbar } from 'notistack'
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST':
       return { ...state, loading: true, error: '' };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, orders: action.payload, error: '' };
+      return { ...state, loading: false, users: action.payload, error: '' };
     case 'FETCH_FAIL':
       return { ...state, loading: true, error: action.payload };
+    case 'DELETE_REQUEST':
+      return { ...state, loadingDelete: true };
+    case 'DELETE_SUCCESS':
+      return { ...state, loadingDelete: false, successDelete: true };
+    case 'DELETE_FAIL':
+      return { ...state, loadingDelete: false };
+    case 'DELETE_RESET':
+      return { ...state, loadingDelete: false, successDelete: false };
+
     default: state;
   }
 }
 
-function AdminOrders() {
+function AdminUsers() {
   const { state } = useContext(Store)
   const { userInfo } = state
   const classes = useStyles()
   const router = useRouter()
 
-  const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
+  const [{ loading, error, users, successDelete, loadingDelete }, dispatch] = useReducer(reducer, {
     loading: true,
-    orders: [],
+    users: [],
     error: ''
   })
 
@@ -39,7 +49,7 @@ function AdminOrders() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/admin/orders`, {
+        const { data } = await axios.get(`/api/admin/users`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -47,16 +57,33 @@ function AdminOrders() {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
-    fetchData();
-  }, []);
+    if (successDelete) {
+      dispatch({ type: 'DELETE_RESET' })
+    } else {
+      fetchData();
+    }
+  }, [successDelete]);
+  const { enqueueSnackbar } = useSnackbar()
 
-  function formatDate(data) {
-    const date = new Date(data)
-    const formatedDate = ((date.getDate())) + "/" + ((date.getMonth() + 1)) + "/" + date.getFullYear()
-    return formatedDate
+  const deleteHandler = async (userId) => {
+    if (!window.confirm('Você tem certeza?')) {
+      return
+    }
+    try {
+      dispatch({ type: 'DELETE_REQUEST' })
+      await axios.delete(`/api/admin/users/${userId}`, {
+        headers: { authorization: `Bearer ${userInfo.token}` }
+      })
+      dispatch({ type: 'DELETE_SUCCESS' })
+      enqueueSnackbar('Usuário deletado com sucesso', { variant: 'success' })
+    } catch (err) {
+      dispatch({ type: 'DELETE_FAIL' });
+      enqueueSnackbar(getError(err), { variant: 'error' })
+    }
   }
+
   return (
-    <Layout title='Pedidos'>
+    <Layout title='Usuários'>
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.placeOrderSection}>
@@ -67,7 +94,7 @@ function AdminOrders() {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/orders" passHref>
-                <ListItem selected button component="a">
+                <ListItem button component="a">
                   <ListItemText primary="Lista de Pedidos"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -77,7 +104,7 @@ function AdminOrders() {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/users" passHref>
-                <ListItem button component="a">
+                <ListItem selected button component="a">
                   <ListItemText primary="Lista de Usuários"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -89,8 +116,9 @@ function AdminOrders() {
             <List>
               <ListItem>
                 <Typography component="h1" variant="h1">
-                  Pedidos
+                  Usuários
                 </Typography>
+                {loadingDelete && <CircularProgress />}
               </ListItem>
               <ListItem>
                 {loading
@@ -104,35 +132,24 @@ function AdminOrders() {
                           <TableHead>
                             <TableRow>
                               <TableCell>ID</TableCell>
-                              <TableCell>USUÁRIO</TableCell>
-                              <TableCell>DATA</TableCell>
-                              <TableCell>TOTAL</TableCell>
-                              <TableCell>STATUS</TableCell>
-                              <TableCell>ENTREGUE</TableCell>
-                              <TableCell>AÇÃO</TableCell>
+                              <TableCell>NOME</TableCell>
+                              <TableCell>EMAIL</TableCell>
+                              <TableCell>ADMIN</TableCell>
+                              <TableCell>AÇÕES</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {orders.map((order) => (
-                              <TableRow key={order._id}>
-                                <TableCell>{order._id.substring(20, 24)}</TableCell>
-                                <TableCell>{order.user ? order.user.name : 'USUÁRIO DELETADO'}</TableCell>
-                                <TableCell>{formatDate(order.createdAt)}</TableCell>
-                                <TableCell>R${order.totalPrice.toFixed(2).toString().replace('.', ',')}</TableCell>
+                            {users.map((user) => (
+                              <TableRow key={user._id}>
+                                <TableCell>{user._id.substring(20, 24)}</TableCell>
+                                <TableCell>{user.name}</TableCell>
+                                <TableCell>{user.email}</TableCell>
+                                <TableCell>{user.isAdmin ? 'SIM' : 'NÃO'}</TableCell>
                                 <TableCell>
-                                  {order.isPaid
-                                    ? `Pago em ${formatDate(order.paidAt)}`
-                                    : 'Não pago'}
-                                </TableCell>
-                                <TableCell>
-                                  {order.isDelivered
-                                    ? `Entregue em ${formatDate(order.deliveredAt)}`
-                                    : 'Não entregue'}
-                                </TableCell>
-                                <TableCell>
-                                  <NextLink href={`/order/${order._id}`} passHref>
-                                    <Button variant="contained">Detalhes</Button>
+                                  <NextLink href={`/admin/user/${user._id}`} passHref>
+                                    <Button size="small" variant="contained"> EDitar</Button>
                                   </NextLink>
+                                  <Button onClick={() => deleteHandler(user._id)} size="small" variant="contained">Deletar</Button>
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -151,4 +168,4 @@ function AdminOrders() {
 }
 
 
-export default dynamic(() => Promise.resolve(AdminOrders), { ssr: false })
+export default dynamic(() => Promise.resolve(AdminUsers), { ssr: false })

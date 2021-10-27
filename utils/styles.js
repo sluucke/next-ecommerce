@@ -87,7 +87,8 @@ const useStyles = makeStyles({
     background: 'transparent'
   },
   placeOrderSection: {
-    marginBottom: 10
+    marginBottom: 10,
+    marginTop: 20,
   },
   error: {
     color: '#f04040'

@@ -37,7 +37,7 @@ function reducer(state, action) {
   }
 }
 
-function AdminDashboard() {
+function AdminProducts() {
   const { state } = useContext(Store)
   const { userInfo } = state
   const classes = useStyles()
@@ -131,6 +131,11 @@ function AdminDashboard() {
                   <ListItemText primary="Lista de Produtos"></ListItemText>
                 </ListItem>
               </NextLink>
+              <NextLink href="/admin/users" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Lista de Usuários"></ListItemText>
+                </ListItem>
+              </NextLink>
             </List>
           </Card>
         </Grid>
@@ -195,9 +200,7 @@ function AdminDashboard() {
                                       Editar
                                     </Button>
                                   </NextLink>
-                                  <Button onClick={() => deleteHandler(product._id)} size="small" variant="contained">
-                                    Deletar
-                                  </Button>
+                                  <Button onClick={() => deleteHandler(product._id)} size="small" variant="contained">Deletar</Button>
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -216,4 +219,4 @@ function AdminDashboard() {
 }
 
 
-export default dynamic(() => Promise.resolve(AdminDashboard), { ssr: false })
+export default dynamic(() => Promise.resolve(AdminProducts), { ssr: false })

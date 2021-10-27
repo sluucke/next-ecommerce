@@ -175,6 +175,11 @@ function ProductEdit({ params }) {
                   <ListItemText primary="Lista de Produtos"></ListItemText>
                 </ListItem>
               </NextLink>
+              <NextLink href="/admin/users" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Lista de Usuários"></ListItemText>
+                </ListItem>
+              </NextLink>
             </List>
           </Card>
         </Grid>
