@@ -99,7 +99,7 @@ export default function Search(props) {
   };
 
   return (
-    <Layout title="Procurar">
+    <Layout title="Pesquisar">
       <Grid className={classes.mt1} container spacing={1}>
         <Grid item md={3}>
           <List>
@@ -164,12 +164,12 @@ export default function Search(props) {
         <Grid item md={9}>
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
-              {products.length === 0 ? 'Não' : countProducts} Resultados
-              {query !== 'all' && query !== '' && ' : ' + query}
-              {category !== 'all' && ' : ' + category}
-              {brand !== 'all' && ' : ' + brand}
-              {price !== 'all' && ' : Preço ' + price}
-              {rating !== 'all' && ' : Avaliação ' + rating + ' ou maior'}
+              {products.length === 0 ? 'Sem' : countProducts} Resultados
+              {query !== 'all' && query !== '' && ': ' + query}
+              {category !== 'all' && ': ' + category}
+              {brand !== 'all' && ': ' + brand}
+              {price !== 'all' && ': Preço ' + price}
+              {rating !== 'all' && ': Avaliação ' + rating + ' ou maior'}
               {(query !== 'all' && query !== '') ||
                 category !== 'all' ||
                 brand !== 'all' ||

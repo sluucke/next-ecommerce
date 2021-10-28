@@ -14,6 +14,7 @@ import { useSnackbar } from 'notistack'
 import { Rating } from '@material-ui/lab'
 import { getError } from '../../utils/error'
 import { useEffect } from 'react'
+import { ChevronRight } from '@material-ui/icons'
 
 export default function ProductScreen({ product }) {
   const router = useRouter()
@@ -79,9 +80,16 @@ export default function ProductScreen({ product }) {
       <div className={classes.section} >
         <NextLink href="/" passHref>
           <Typography>
-            <Link className={classes.primaryLink} style={{ textDecoration: 'none' }}>início</Link> / {product.category} / {product.name}
+            <Link className={classes.primaryLink} style={{ textDecoration: 'none' }}>Início</Link> <ChevronRight />&nbsp;
           </Typography>
         </NextLink>
+        <NextLink href={`/search?category=${product.category}`} passHref>
+          <Typography>
+            <Link className={classes.primaryLink} style={{ textDecoration: 'none' }}>{product.category}</Link> <ChevronRight />&nbsp;
+          </Typography>
+        </NextLink>
+        <Typography>{product.name}</Typography>
+
       </div>
       <Grid container spacing={1} className={classes.card}>
         <Grid item md={6} xs={12}>

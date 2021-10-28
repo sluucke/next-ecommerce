@@ -26,7 +26,12 @@ export default function ProductItem({ product }) {
       </NextLink>
       <CardActions>
         <NextLink href={`/product/${product.slug}`} passHref>
-          <Link style={{ textDecoration: 'none' }}>R${product.price.toFixed(2).toString().replace('.', ',')}</Link>
+          <Link style={{ textDecoration: 'none' }}>
+            <Typography component="h3" variant="h5">
+
+              R${product.price.toFixed(2).toString().replace('.', ',')}
+            </Typography>
+          </Link>
         </NextLink>
       </CardActions>
     </Card>

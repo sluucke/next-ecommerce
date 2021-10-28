@@ -36,6 +36,15 @@ const useStyles = makeStyles((theme) => ({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     padding: 10,
+    display: 'flex',
+    alignItems: 'center',
+    '& p': {
+      alignItems: 'center',
+      display: 'flex',
+    },
+    '& svg': {
+      fill: 'rgba(0,0,0,.5)'
+    }
   },
   card: {
     boxShadow: '1, 1, 1, 2 rgba(0,0,0,.2)'
@@ -125,8 +134,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
   },
   searchInput: {
-    paddingLeft: 5,
+    paddingLeft: 10,
+    paddingTop: 1,
+    width: '350px',
     color: '#000000',
+    fontSize: 14,
     '& ::placeholder': {
       color: '#606060',
     },

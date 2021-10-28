@@ -169,7 +169,7 @@ export default function Layout({ title, description, children }) {
             </Drawer>
             <div className={classes.searchSection}>
               <form onSubmit={submitHandler} className={classes.searchForm}>
-                <InputBase name="query" className={classes.searchInput} placeholder="Procure por produtos" onChange={queryChangeHandler} />
+                <InputBase name="query" className={classes.searchInput} placeholder="Pesquise por produtos ou marcas" onChange={queryChangeHandler} />
                 <IconButton type="submit" className={classes.iconButton} aria-label="search">
                   <SearchIcon />
                 </IconButton>
