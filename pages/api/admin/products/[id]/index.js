@@ -25,7 +25,7 @@ handler.put(async (req, res) => {
     product.brand = req.body.brand;
     product.countInStock = req.body.countInStock;
     product.description = req.body.description;
-    await product.save();
+    await product.save().catch((err) => console.log(err));
     await db.disconnect();
     res.send({ message: 'Produto atualizazdo com sucesso' });
   } else {
@@ -35,16 +35,16 @@ handler.put(async (req, res) => {
 });
 
 handler.delete(async (req, res) => {
-  await db.connect()
-  const product = await Product.findById(req.query.id)
+  await db.connect();
+  const product = await Product.findById(req.query.id);
   if (product) {
-    await product.remove()
-    await db.disconnect()
-    res.send({ message: 'Produto deletado com sucesso' })
+    await product.remove();
+    await db.disconnect();
+    res.send({ message: 'Produto deletado com sucesso' });
   } else {
-    await db.disconnect()
-    res.status(404).send({ message: 'Produto não encontrado' })
+    await db.disconnect();
+    res.status(404).send({ message: 'Produto não encontrado' });
   }
-})
+});
 
 export default handler;

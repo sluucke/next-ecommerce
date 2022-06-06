@@ -16,29 +16,29 @@ const signToken = (user) => {
   );
 };
 const isAuth = async (req, res, next) => {
-  const { authorization } = req.headers
+  const { authorization } = req.headers;
 
   if (authorization) {
     // Bearer xxx
-    const token = authorization.slice(7, authorization.length)
+    const token = authorization.slice(7, authorization.length);
     jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
       if (err) {
-        res.status(401).send({ message: 'Token is not valid' })
+        res.status(401).send({ message: 'Token is not valid' });
       } else {
-        req.user = decode
+        req.user = decode;
         next();
       }
-    })
+    });
   } else {
-    res.status(401).send({ message: 'Token is not suppiled' })
+    res.status(401).send({ message: 'Token is not suppiled' });
   }
-}
+};
 const isAdmin = async (req, res, next) => {
   if (req.user.isAdmin) {
     next();
   } else {
-    res.status(401).send({ message: 'Usuário sem permissão administrador' })
+    res.status(401).send({ message: 'Usuário sem permissão administrador' });
   }
-}
+};
 
 export { signToken, isAuth, isAdmin };
